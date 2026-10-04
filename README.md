@@ -6,7 +6,7 @@ Claude Code skills and review subagents for Flutter/Rust, Angular, Spring Boot a
 
 | Skill | Triggers when | Notes |
 |---|---|---|
-| `review` | Claude finishes a code change, or you type `/review [base-branch] [release]` | Runs automatically. Spawns the diff reviewers below in parallel (not `pentester` or `seo-reviewer`). |
+| `review` | Claude finishes a code change, or you type `/review [base-branch] [release]` | Runs automatically. Spawns the diff reviewers below in parallel; `release` adds `pentester`. Never runs `seo-reviewer`. |
 | `angular-best-practices` | Writing/reviewing Angular code | Version table (v14 → v22); signals/zoneless guidance gated by version |
 | `spring-boot-best-practices` | Writing/reviewing Spring Boot / Java backend code | |
 | `rust-idiomatic-review` | Finishing or reviewing Rust code | |
@@ -36,7 +36,7 @@ All agents are read-only: they report and never edit. The diff reviewers (the fi
 | `design-reviewer` | UI/styling changed | — | — | sonnet |
 | `legal-compliance-reviewer` | Personal-data collection, logging, SDKs or permissions changed; before publishing | `privacy-legal-compliance` | — | default |
 | `seo-reviewer` | Public web pages changed, before a site launch, or on request; checks the live site too if given a URL | `seo-ai-search` | — | sonnet |
-| `pentester` | On request: authorized security assessment of a project you own (web/API, mobile, deps, infra/cloud) | `pentest-methodology` | `pentest-web-api`, `pentest-mobile`, `pentest-dependencies-cve`, `pentest-infra-cloud` (by layer) | default |
+| `pentester` | On request, or via `/review release`: authorized security assessment of a project you own (web/API, mobile, deps, infra/cloud) | `pentest-methodology` | `pentest-web-api`, `pentest-mobile`, `pentest-dependencies-cve`, `pentest-infra-cloud` (by layer) | default |
 
 Preloaded skills must exist under the same names in your skills directory. Claude Code skips a missing one silently (debug-log warning only), so install skills and agents together.
 
@@ -66,7 +66,7 @@ Restart Claude Code (or start a new session) to pick up new agents. Check with `
 ```
 /review                 # changes vs main (committed on branch + uncommitted + untracked)
 /review develop         # changes vs develop
-/review main release    # legal-compliance-reviewer reviews the whole app (pre-release check)
+/review main release    # pre-release: whole-app legal review + pentester (code/config only unless you name a URL you own)
 ```
 
 If the base branch doesn't exist (or you're on it), `/review` reviews staged + unstaged changes only. It runs only the reviewers whose area the change touched — e.g. a pure Spring change won't spawn the design reviewer — and merges their output into one deduplicated report sorted by severity. It never edits files.
