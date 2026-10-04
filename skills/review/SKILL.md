@@ -1,14 +1,13 @@
 ---
 name: review
-description: Use when the user runs /review to review the current branch or uncommitted changes. Picks the relevant reviewer agents from the changed files, runs them in parallel, and merges their findings into one severity-sorted report.
+description: Use before saying a code change is done (Dart, TS, Java, Rust or k8s files), or when asked to review. Runs the relevant reviewer agents in parallel on the diff and merges findings by severity. Skip docs-only changes.
 argument-hint: "[base-branch] [release]"
-disable-model-invocation: true
 allowed-tools: Bash(git diff *) Bash(git rev-parse *) Bash(git merge-base *) Bash(git status *)
 ---
 
 # /review — parallel multi-reviewer pass
 
-Arguments: `$ARGUMENTS`
+Arguments: `$ARGUMENTS` (empty when Claude runs this on its own; then use the defaults)
 - First argument that isn't `release`: the base branch (default `main`).
 - `release` (or the user saying this is a pre-release / pre-launch check): also run legal-compliance.
 

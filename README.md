@@ -6,7 +6,7 @@ Claude Code skills and review subagents for Flutter/Rust, Angular, Spring Boot a
 
 | Skill | Triggers when | Notes |
 |---|---|---|
-| `review` | You type `/review [base-branch] [release]` | User-only (`disable-model-invocation`). Spawns the agents below in parallel. |
+| `review` | Claude finishes a code change, or you type `/review [base-branch] [release]` | Runs automatically. Spawns the agents below in parallel. |
 | `angular-best-practices` | Writing/reviewing Angular code | Version table (v14 → v22); signals/zoneless guidance gated by version |
 | `spring-boot-best-practices` | Writing/reviewing Spring Boot / Java backend code | |
 | `rust-idiomatic-review` | Finishing or reviewing Rust code | |
