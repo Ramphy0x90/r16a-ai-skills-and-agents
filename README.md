@@ -1,12 +1,12 @@
 # r16a AI skills and agents
 
-Claude Code skills and review subagents for Flutter/Rust, Angular, Spring Boot and Kubernetes projects, plus a `/review` command that runs the relevant reviewers in parallel.
+Claude Code skills and review subagents for Flutter/Rust, Angular, Spring Boot and Kubernetes projects (code quality, design, performance, security, privacy, SEO and authorized pentesting), plus a `/review` command that runs the relevant reviewers in parallel.
 
 ## Skills
 
 | Skill | Triggers when | Notes |
 |---|---|---|
-| `review` | Claude finishes a code change, or you type `/review [base-branch] [release]` | Runs automatically. Spawns the agents below in parallel. |
+| `review` | Claude finishes a code change, or you type `/review [base-branch] [release]` | Runs automatically. Spawns the diff reviewers below in parallel (not `pentester` or `seo-reviewer`). |
 | `angular-best-practices` | Writing/reviewing Angular code | Version table (v14 → v22); signals/zoneless guidance gated by version |
 | `spring-boot-best-practices` | Writing/reviewing Spring Boot / Java backend code | |
 | `rust-idiomatic-review` | Finishing or reviewing Rust code | |
@@ -16,11 +16,17 @@ Claude Code skills and review subagents for Flutter/Rust, Angular, Spring Boot a
 | `app-security-review` | Code touching input, auth, secrets, external data, dependencies | |
 | `k8s-manifest-hardening` | Writing/reviewing Kubernetes manifests | |
 | `privacy-legal-compliance` | Before launching an app that handles personal data | Not legal advice |
+| `seo-ai-search` | Building/auditing public web pages for search and AI-search visibility | Includes `ai-crawlers.md` (robots.txt tokens for AI crawlers) |
+| `pentest-methodology` | Starting an authorized pentest of a system you own | Entry point: scope, authorization, severity, reporting. Load before the layer skills. |
+| `pentest-web-api` | Pentesting a web app, REST/GraphQL API or backend | OWASP Top 10 / ASVS |
+| `pentest-mobile` | Pentesting a Flutter or native Android/iOS app | OWASP MASVS/MASTG |
+| `pentest-dependencies-cve` | Auditing dependencies, base images and runtimes for CVEs and supply-chain risk | |
+| `pentest-infra-cloud` | Pentesting containers, k8s, TLS, exposed services and cloud config you own | |
 | `frontend-design` | Building new UI with a distinctive visual direction | Third-party, Apache-2.0 (see `skills/frontend-design/LICENSE.txt`) |
 
 ## Agents
 
-All agents are read-only reviewers. Each returns findings as `[critical|high|medium|low] path:line — what's wrong — failure scenario`, most severe first, or exactly `No findings.`
+All agents are read-only: they report and never edit. The diff reviewers (the first five) return findings as `[critical|high|medium|low] path:line — what's wrong — failure scenario`, most severe first, or exactly `No findings.` `seo-reviewer` uses the same line format after a `Stack: …` header. `pentester` returns a full assessment report (summary line, CVSS/CWE-tagged findings with evidence and remediation, caveats).
 
 | Agent | Triggers when | Preloaded skills (`skills:`) | Loads on demand (`Skill` tool) | Model |
 |---|---|---|---|---|
@@ -29,6 +35,8 @@ All agents are read-only reviewers. Each returns findings as `[critical|high|med
 | `performance-reviewer` | Flutter UI or performance-sensitive Rust changed | — | `flutter-performance-review` (for Dart) | sonnet |
 | `design-reviewer` | UI/styling changed | — | — | sonnet |
 | `legal-compliance-reviewer` | Personal-data collection, logging, SDKs or permissions changed; before publishing | `privacy-legal-compliance` | — | default |
+| `seo-reviewer` | Public web pages changed, before a site launch, or on request; checks the live site too if given a URL | `seo-ai-search` | — | sonnet |
+| `pentester` | On request: authorized security assessment of a project you own (web/API, mobile, deps, infra/cloud) | `pentest-methodology` | `pentest-web-api`, `pentest-mobile`, `pentest-dependencies-cve`, `pentest-infra-cloud` (by layer) | default |
 
 Preloaded skills must exist under the same names in your skills directory. Claude Code skips a missing one silently (debug-log warning only), so install skills and agents together.
 
