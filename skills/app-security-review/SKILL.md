@@ -36,7 +36,7 @@ Run this as a self-review pass on code that touches user input, authentication, 
 
 - Before adding a new dependency, check it's actively maintained and has no widely-known unpatched vulnerabilities (a quick check of the ecosystem's advisory database — `cargo audit` for Rust, `npm audit`/`dart pub outdated`-equivalent for the relevant ecosystem — is cheap and worth doing).
 - If the project has a lockfile, don't bypass it casually (e.g. don't resolve a Docker build failure by switching `npm ci` to `npm install` without first checking *why* the lockfile is out of sync — regenerate the lockfile deliberately instead, so the dependency tree stays reproducible and audited).
-- Periodically (or when toutouching a dependency-heavy area) check for known-vulnerable versions of direct dependencies, especially for anything handling crypto, parsing, or network input.
+- Periodically (or when touching a dependency-heavy area) check for known-vulnerable versions of direct dependencies, especially for anything handling crypto, parsing, or network input.
 
 ## End-to-end encryption specifics (relevant for Matrix/E2EE work)
 
