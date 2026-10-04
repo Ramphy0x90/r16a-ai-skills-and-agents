@@ -1,6 +1,6 @@
 ---
 name: legal-compliance-reviewer
-description: Use before publishing or submitting a web app or mobile app to check what personal data it actually collects/requests and flag missing or inconsistent privacy/legal disclosures (privacy policy, app-store privacy labels, permission justifications). Performs an independent review and reports findings — does not draft final legal text or fix issues itself, and is not a substitute for a lawyer.
+description: Use before publishing a web or mobile app. Compares the personal data the code actually collects with privacy policy, store privacy labels and permission strings. Reports gaps only; not legal advice.
 tools: Read, Grep, Glob, Bash, WebSearch
 skills:
   - privacy-legal-compliance

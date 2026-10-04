@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: Use after implementing or changing anything that touches user input, authentication, secrets, dependencies, E2EE/crypto, or Kubernetes manifests. Performs an independent security review (app-level and, where relevant, infra-level) and reports findings — does not fix issues itself.
+description: Use after changing code that touches user input, auth, secrets, dependencies, E2EE/crypto, or Kubernetes manifests. Independent app- and infra-level security review. Reports findings only; never edits.
 tools: Read, Grep, Glob, Bash, Skill
 skills:
   - app-security-review
