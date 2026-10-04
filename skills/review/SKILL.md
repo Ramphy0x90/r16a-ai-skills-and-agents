@@ -9,7 +9,7 @@ allowed-tools: Bash(git diff *) Bash(git rev-parse *) Bash(git merge-base *) Bas
 
 Arguments: `$ARGUMENTS` (empty when Claude runs this on its own; then use the defaults)
 - First argument that isn't `release`: the base branch (default `main`).
-- `release` (or the user saying this is a pre-release / pre-launch check): also run legal-compliance.
+- `release` (or the user saying this is a pre-release / pre-launch check): legal-compliance reviews the whole app, not just the diff.
 
 ## 1. Collect the changed files
 
@@ -32,7 +32,7 @@ Run a reviewer only if its area was touched. Use paths first; for borderline cas
 | `design-reviewer` | UI: Flutter screens/widgets/theme files, Angular component `.ts`/`.html`, `.css`/`.scss`, other templates or design tokens |
 | `performance-reviewer` | lists/collections rendered in UI, images, async/stream/state code, animations, or Rust/Java hot paths (loops over large data, serialization, per-request/per-frame code, queries) |
 | `security-reviewer` | auth/session/login code, input handling (controllers, forms, parsers, deep links), secrets/config (`.env*`, `application*.yml`, `*secret*`), crypto/E2EE, dependency manifests or lockfiles (`pubspec.*`, `package*.json`, `Cargo.*`, `pom.xml`, `build.gradle*`), Kubernetes manifests |
-| `legal-compliance-reviewer` | only when `release` was passed or the user said this is pre-release — never by default |
+| `legal-compliance-reviewer` | anything that changes what personal data is collected, stored, logged or shared: data models/entities/DB migrations with personal fields (email, name, phone, location, device ID, IP), account/profile code, analytics/crash-reporting/push/ad SDKs added to dependency manifests, logging config, permissions (`AndroidManifest.xml`, `Info.plist`, permission strings), privacy policy/terms/store-listing files. Always when `release` was passed. |
 
 Docs-only, CI-only or formatting-only changes may need no reviewer at all — say so instead of spawning one.
 
@@ -43,7 +43,7 @@ Spawn every applicable reviewer **in a single message** (one Agent call per revi
 Give each one a self-contained prompt — they don't see this conversation:
 - the repo root and the exact diff command(s) from step 1,
 - the subset of changed files relevant to that reviewer (it may look at adjacent files),
-- for legal-compliance, that this is a pre-release review of the whole app, not just the diff.
+- for legal-compliance: normally, check whether the changed data flows are covered by the existing disclosures (privacy policy, store labels, permission strings); with `release`, review the whole app.
 
 ## 4. Merge into one report
 
@@ -59,7 +59,7 @@ Output:
 ```
 ## Review: <base or "uncommitted changes"> — <N> files
 
-Ran: code-quality, security · Skipped: design (no UI files), performance (no hot paths), legal (not a release)
+Ran: code-quality, security · Skipped: design (no UI files), performance (no hot paths), legal (no personal-data changes)
 
 [critical] path:line — … — …  (security)
 [high] path:line — … — …  (code-quality, performance)

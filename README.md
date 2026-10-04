@@ -28,7 +28,7 @@ All agents are read-only reviewers. Each returns findings as `[critical|high|med
 | `security-reviewer` | Input, auth, secrets, deps, crypto or k8s manifests changed | `app-security-review` | `k8s-manifest-hardening` (if manifests changed) | default |
 | `performance-reviewer` | Flutter UI or performance-sensitive Rust changed | — | `flutter-performance-review` (for Dart) | sonnet |
 | `design-reviewer` | UI/styling changed | — | — | sonnet |
-| `legal-compliance-reviewer` | Before publishing / store submission | `privacy-legal-compliance` | — | default |
+| `legal-compliance-reviewer` | Personal-data collection, logging, SDKs or permissions changed; before publishing | `privacy-legal-compliance` | — | default |
 
 Preloaded skills must exist under the same names in your skills directory. Claude Code skips a missing one silently (debug-log warning only), so install skills and agents together.
 
@@ -58,7 +58,7 @@ Restart Claude Code (or start a new session) to pick up new agents. Check with `
 ```
 /review                 # changes vs main (committed on branch + uncommitted + untracked)
 /review develop         # changes vs develop
-/review main release    # also run legal-compliance-reviewer (pre-release check)
+/review main release    # legal-compliance-reviewer reviews the whole app (pre-release check)
 ```
 
 If the base branch doesn't exist (or you're on it), `/review` reviews staged + unstaged changes only. It runs only the reviewers whose area the change touched — e.g. a pure Spring change won't spawn the design reviewer — and merges their output into one deduplicated report sorted by severity. It never edits files.
