@@ -16,7 +16,7 @@ Claude Code skills and review subagents for Flutter/Rust, Angular, Spring Boot a
 | `app-security-review` | Code touching input, auth, secrets, external data, dependencies | |
 | `k8s-manifest-hardening` | Writing/reviewing Kubernetes manifests | |
 | `privacy-legal-compliance` | Before launching an app that handles personal data | Not legal advice |
-| `seo-ai-search` | Building/auditing public web pages for search and AI-search visibility | Includes `ai-crawlers.md` (robots.txt tokens for AI crawlers) |
+| `seo-ai-search` | Building/auditing public web pages for search and AI-search visibility | Includes `references/ai-crawlers.md` (robots.txt tokens for AI crawlers) |
 | `pentest-methodology` | Starting an authorized pentest of a system you own | Entry point: scope, authorization, severity, reporting. Load before the layer skills. |
 | `pentest-web-api` | Pentesting a web app, REST/GraphQL API or backend | OWASP Top 10 / ASVS |
 | `pentest-mobile` | Pentesting a Flutter or native Android/iOS app | OWASP MASVS/MASTG |
