@@ -1,6 +1,6 @@
 ---
 name: flutter-performance-review
-description: Use before calling any Flutter screen/widget work done, or when asked to review or optimize Flutter UI performance. Checks for unnecessary rebuilds, missing const, inefficient list rendering, unbounded image/asset costs, and other common Flutter performance mistakes.
+description: Use before calling Flutter screen/widget work done, or when asked to review or optimize Flutter UI performance. Checks rebuilds, missing const, list rendering, image decode cost and undisposed controllers.
 ---
 
 # Flutter performance review

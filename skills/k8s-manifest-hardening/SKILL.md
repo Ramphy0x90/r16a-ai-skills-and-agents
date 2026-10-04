@@ -1,6 +1,6 @@
 ---
 name: k8s-manifest-hardening
-description: Use when writing or reviewing any Kubernetes manifest (Deployment, Job, StatefulSet, Pod, CronJob, ConfigMap, Secret) in any repo. Applies security and reliability baseline checks equivalent to what tools like Trivy/kube-bench/kube-linter flag by default, so manifests pass misconfiguration scanning the first time instead of needing iterative fixes.
+description: Use when writing or reviewing any Kubernetes manifest (Deployment, Job, StatefulSet, Pod, CronJob, ConfigMap, Secret). Applies the securityContext, secrets, resources and image baseline that Trivy/kube-linter flag by default.
 ---
 
 # Kubernetes manifest hardening
@@ -25,13 +25,13 @@ securityContext:
 ```
 
 - **`runAsNonRoot: true` + `runAsUser: <uid>`**: never run as root (UID 0) unless the image genuinely requires it (rare, and should be a deliberate documented exception, not a default). Check the image's Dockerfile/docs for what non-root UID it supports, if any — some images document a specific UID to use (don't guess blindly; if unknown, check the image's upstream docs or run `docker run --rm <image> id` style inspection before picking a number).
-- **`readOnlyRootFilesystem: true`**: pair this with explicit `emptyDir` (or other) volume mounts for any path the container actually needs to write to (temp files, logs, sockets). A container that writes logs to its own filesystem (e.g. to `/homeserver.log` instead of stdout) will break under this setting — the fix is usually to mount a writable `emptyDir` at that specific path, or better, reconfigure the app to log to stdout/stderr (the k8s-native pattern) instead of a file.
+- **`readOnlyRootFilesystem: true`**: pair this with explicit `emptyDir` (or other) volume mounts for any path the container actually needs to write to (temp files, logs, sockets). A container that writes logs to its own filesystem (e.g. to `/app/server.log` instead of stdout) will break under this setting — the fix is usually to mount a writable `emptyDir` at that specific path, or better, reconfigure the app to log to stdout/stderr (the k8s-native pattern) instead of a file.
 - **`allowPrivilegeEscalation: false`**: blocks a process from gaining more privileges than its parent (e.g. via setuid binaries) — safe to set `false` for essentially all application containers.
 - **`capabilities.drop: [ALL]`**: drop all Linux capabilities by default; only add back a specific capability (`capabilities.add: [...]`) if the container has a proven, specific need (e.g. `NET_BIND_SERVICE` for binding to a port <1024) — don't add capabilities preemptively.
 
 ## Secrets
 
-- **Never put a secret value (password, API key, token, private key) in a `ConfigMap`.** ConfigMaps are not encrypted at rest by default and are readable by anyone with ConfigMap read access in the namespace. Use a `Secret` instead, even for values that feel "low stakes" — e.g. a SQL init script that embeds a password inline should instead template the password in via an env var sourced from a `Secret` (e.g. `psql -v synapse_password="$SYNAPSE_PW"` with `SYNAPSE_PW` from a `secretKeyRef`), keeping only the non-secret SQL logic in the ConfigMap.
+- **Never put a secret value (password, API key, token, private key) in a `ConfigMap`.** ConfigMaps are not encrypted at rest by default and are readable by anyone with ConfigMap read access in the namespace. Use a `Secret` instead, even for values that feel "low stakes" — e.g. a SQL init script that embeds a password inline should instead template the password in via an env var sourced from a `Secret` (e.g. `psql -v app_password="$APP_DB_PASSWORD"` with `APP_DB_PASSWORD` from a `secretKeyRef`), keeping only the non-secret SQL logic in the ConfigMap.
 - Reference secret values via `valueFrom.secretKeyRef` in `env`, or as mounted secret volumes — never inline a literal secret value in a manifest committed to version control.
 - If secrets are managed via SOPS, Sealed Secrets, or an external secrets operator, follow the project's existing pattern rather than introducing a different one.
 

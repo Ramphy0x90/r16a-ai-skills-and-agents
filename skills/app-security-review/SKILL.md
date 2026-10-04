@@ -1,6 +1,6 @@
 ---
 name: app-security-review
-description: Use before calling any feature that handles user input, authentication, secrets, or external data done, or when asked to review code for security issues. Covers secrets handling, input validation, injection risks, auth/session handling, insecure deserialization, and dependency vulnerabilities — application/code level, complementing k8s-manifest-hardening (infrastructure level).
+description: Use before calling code that handles user input, auth, secrets, external data or new dependencies done, or when asked for a security review. App/code level — secrets, validation, injection, sessions, deserialization, E2EE.
 ---
 
 # Application security review
@@ -16,7 +16,7 @@ Run this as a self-review pass on code that touches user input, authentication, 
 
 ## Input validation
 
-- Treat all external input as untrusted: HTTP request bodies/params/headers, file uploads, query strings, deep-linked data, data from another service, and (for a Matrix/federated or any multi-tenant system) data received from other servers/users.
+- Treat all external input as untrusted: HTTP request bodies/params/headers, file uploads, query strings, deep-linked data, data from another service, and (for a federated or multi-tenant system) data received from other servers/users.
 - Validate shape and bounds (type, length, range, allowed character set) at the boundary where input enters the system — don't assume validation happened earlier in the call chain unless that's structurally guaranteed.
 - For anything that builds a query, command, or path from input: use parameterized queries (never string-concatenate user input into SQL), avoid shelling out with unsanitized input (avoid `sh -c` string interpolation; prefer an API that takes arguments as a list), and canonicalize/validate file paths built from input to prevent path traversal (`../../etc/passwd`-style).
 
@@ -38,7 +38,7 @@ Run this as a self-review pass on code that touches user input, authentication, 
 - If the project has a lockfile, don't bypass it casually (e.g. don't resolve a Docker build failure by switching `npm ci` to `npm install` without first checking *why* the lockfile is out of sync — regenerate the lockfile deliberately instead, so the dependency tree stays reproducible and audited).
 - Periodically (or when touching a dependency-heavy area) check for known-vulnerable versions of direct dependencies, especially for anything handling crypto, parsing, or network input.
 
-## End-to-end encryption specifics (relevant for Matrix/E2EE work)
+## End-to-end encryption specifics (for E2EE/federated messaging systems)
 
 - Never log decrypted message content, room keys, or session keys, even at debug level.
 - Session/device verification state should be checked before treating a peer as trusted (if building UI around device verification, don't silently treat unverified devices as verified for convenience).

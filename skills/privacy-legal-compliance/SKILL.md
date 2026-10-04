@@ -1,6 +1,6 @@
 ---
 name: privacy-legal-compliance
-description: Use before publishing or launching a web app, mobile app, or self-hosted service that handles any personal data (accounts, emails, messages, files, IPs, analytics, etc.) — to check what privacy/legal disclosures are required and draft a reviewable starting point. Covers GDPR, Swiss FADP, app store (Apple/Google) requirements, and E2EE/messaging-specific regulatory considerations.
+description: Use before launching a web app, mobile app or self-hosted service that handles personal data, to check required privacy disclosures and draft a reviewable policy. Covers GDPR, Swiss FADP, app-store labels, E2EE messaging.
 ---
 
 # Privacy & legal compliance for shipping an app
@@ -35,22 +35,22 @@ A privacy policy should state, in plain language:
 - **User rights** — access, rectification, erasure ("right to be forgotten"), data portability, and the right to lodge a complaint with a supervisory authority. For a self-hosted single-user-controlled service, "how to exercise this" can be as simple as "email me" or "use the in-app delete-account function."
 - **Breach notification posture** — you don't need a polished incident-response plan for a hobby project, but the policy shouldn't claim guarantees you can't back up (avoid "we guarantee your data is 100% secure").
 
-## Swiss FADP (revised Federal Act on Data Protection, in force since Sept 2023) — relevant since the operator is Switzerland-based
+## Swiss FADP (revised Federal Act on Data Protection, in force since Sept 2023) — if the controller or any users are in Switzerland
 
 Similar transparency obligations to GDPR but with real differences — don't just copy a GDPR policy and call it FADP-compliant:
 - No GDPR-style enumerated "legal basis" requirement in the same structured way, but purpose limitation, transparency, and data minimization are still required principles.
 - A Swiss-based controller processing data of Swiss residents is squarely in scope regardless of EU exposure.
 - Cross-border transfer rules exist but are structured differently from GDPR's adequacy/SCC mechanism — check the current Federal Data Protection and Information Commissioner (FDPIC) guidance rather than assuming GDPR's mechanism applies verbatim.
-- If the service has both Swiss and EU users (likely, given the stated goal of being a non-US-jurisdiction alternative), the policy generally needs to satisfy both frameworks — in practice this usually means writing to the stricter of the two requirements on each point rather than maintaining two separate policies, unless there's a reason to split them.
+- If the service has both Swiss and EU users, the policy generally needs to satisfy both frameworks — in practice this usually means writing to the stricter of the two requirements on each point rather than maintaining two separate policies, unless there's a reason to split them.
 
-## App store requirements (once Domovoy or another project goes mobile)
+## App store requirements (for mobile apps)
 
 - **Apple App Store**: requires a working privacy policy URL before submission, and requires filling out the "App Privacy" (nutrition label) questionnaire in App Store Connect — declaring every data type collected (even if not sold/shared) and whether it's linked to identity, used for tracking, etc. Mismatches between the declared label and the app's actual behavior are a common rejection/removal reason — the questionnaire answers must match the privacy policy must match what the code actually does.
 - **Google Play**: requires a privacy policy URL and a completed "Data safety" section in Play Console with equivalent disclosures (data types collected/shared, encryption in transit, whether deletion is supported).
 - Both stores additionally require a justification string for sensitive runtime permissions (camera, contacts, location, etc.) — the justification shown to the reviewer/user should match what the feature actually needs, not be broader "just in case."
 - For an E2EE messaging app specifically: both stores' export-compliance questionnaires ask about encryption — answer accurately; standard end-to-end encryption of user content typically falls under either an exemption or a straightforward self-classification, but the exact classification can change, so check current App Store Connect / Play Console guidance at submission time rather than relying on this skill's text indefinitely.
 
-## E2EE / messaging-specific regulatory notes (relevant to Zmey specifically)
+## E2EE / messaging-specific regulatory notes (for E2EE/federated messaging systems)
 
 - The core legal/technical story for an E2EE service is usually: "we cannot read message content; we only hold what's structurally necessary to route it (and even that may be minimized)." State this precisely and accurately in the policy — don't overclaim "we can't see anything" if any metadata is in fact visible server-side.
 - The EU has ongoing regulatory attention on E2EE messaging and content-scanning obligations (commonly referred to as "Chat Control" proposals) — this is an actively evolving area, not settled law, and the regulatory outcome affects what an E2EE provider can truthfully claim and may affect what's legally required of them in the EU market. Don't draft permanent policy language that assumes the current landscape is final; flag this specific area as one to re-check close to any EU launch rather than treating it as a one-time compliance check.

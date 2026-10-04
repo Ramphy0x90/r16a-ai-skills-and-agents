@@ -1,6 +1,6 @@
 ---
 name: spring-boot-best-practices
-description: Use when writing or reviewing Spring Boot / Java backend code (controllers, services, repositories, configuration, messaging). Covers layered architecture, dependency injection, exception handling, validation, transaction boundaries, persistence performance (N+1 queries), configuration/secrets, and testing conventions.
+description: Use when writing or reviewing Spring Boot / Java backend code (controllers, services, repositories, config, messaging). Covers layering, DI, exceptions, validation, transactions, N+1 queries, secrets and tests.
 ---
 
 # Spring Boot best practices

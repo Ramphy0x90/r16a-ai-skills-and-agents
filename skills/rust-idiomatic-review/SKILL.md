@@ -1,6 +1,6 @@
 ---
 name: rust-idiomatic-review
-description: Use before calling any Rust code done, or when asked to review Rust code. Checks for unwrap()/panic! in non-test production paths, proper error propagation, ownership/borrowing cleanliness, unnecessary cloning, and clippy-level idiom issues.
+description: Use before calling Rust code done, or when asked to review Rust code. Checks unwrap()/panic! in production paths, error propagation, ownership and needless clones, async blocking, and clippy-level idioms.
 ---
 
 # Rust idiomatic code review

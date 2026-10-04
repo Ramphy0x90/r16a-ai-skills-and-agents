@@ -1,6 +1,6 @@
 ---
 name: flutter-rust-env-setup
-description: Use when setting up a Flutter project with a Rust core via flutter_rust_bridge and Cargokit from scratch, or when diagnosing a build/run failure in such a project — content hash mismatches, linker errors (missing native libraries), "cannot find type in this scope" / SseEncode errors in frb_generated.rs, crate-not-found errors, or integrate scaffolding conflicts.
+description: Use when setting up a Flutter app with a Rust core via flutter_rust_bridge + Cargokit, or diagnosing its build failures (content hash mismatch, missing native libs, SseEncode/cannot find type errors in frb_generated.rs).
 ---
 
 # Flutter + Rust (flutter_rust_bridge) environment setup & troubleshooting
@@ -27,7 +27,7 @@ This skill covers the `flutter_rust_bridge` + Cargokit toolchain: a Flutter app 
 
 5. **Required system libraries** — install before the first build, per target platform:
    - Linux (desktop target): `libsqlite3-dev`, `libsecret-1-dev`, `libgtk-3-dev` (exact list depends on which crates are pulled in — e.g. a crate needing SQLite needs `libsqlite3-dev`; a crate needing secret storage needs `libsecret-1-dev`). If a linker error names a missing `-l<name>` library, the fix is almost always `apt install lib<name>-dev` (or the distro equivalent), not a Cargo-side fix.
-   - macOS/Windows: check the specific crates in use for their native dependency requirements (e.g. `matrix-sdk-sqlite` needs SQLite; the OS package manager equivalents are Homebrew/vcpkg).
+   - macOS/Windows: check the specific crates in use for their native dependency requirements (e.g. an SDK crate with a SQLite-backed store, such as one built on `rusqlite`, needs SQLite; the OS package manager equivalents are Homebrew/vcpkg).
 
 ## The `pub` vs `pub(crate)` rule — critical, check this first on bridge errors
 
